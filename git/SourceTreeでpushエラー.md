@@ -9,7 +9,7 @@ Completed with errors, see above`
 
 - 解決方法
 1. GitHubで、以下のようにメニューを辿り、トークンを生成＋コピー  
-`Settings` ＞ 左側メニューの`Developer settings` ＞ `Personal access tokens` ＞ `Token(clasic)` ＞ `Generate new token`  
+`Settings` ＞ 左側メニューの`Developer settings` ＞ `Personal access tokens` ＞ `Tokens(classic)` ＞ `Generate new token`  
 ※トークン生成時に、repoスコープにチェックを入れておく。
 2. SourceTreeで、トークンを設定  
 設定 ＞ リモート ＞ 設定するパスを編集  
