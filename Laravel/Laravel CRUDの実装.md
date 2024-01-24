@@ -1,0 +1,120 @@
+# CRUDの実装
+## 1. コード作成（Reed）
+1. コントローラ作成
+    * sail artisan make:controller コントローラ名 —invokable
+    * 処理記述
+    * view(ブレード名、引数)
+    * 引数部をwith()で渡しても良い
+2. ルート設定
+    * web.appにルーティング
+    * Route::get(ルート名、ルートパス、メソッド）
+3. ブレード作成
+    * .blade.php拡張子で作成
+4. データベース作成
+    * マイグレーションファイル作成
+        * sail artisan make:migration (create_tweets_table)
+        * $table->id()などとカラムを設定
+    * テーブル生成（マイグレーション実行）
+        * sail artisan migrate
+    * Eloquent作成
+        * sail artisan make:model
+        * オプション
+            * -f：ファクトリー生成
+            * -m：マイグレーションファイル生成
+            * -s：シーダー生成
+            * -c：コントローラ生成
+            * —pivot：交差モデル生成
+        * 注意事項
+            * モデルは単数、テーブルは複数形
+            * それ以外は、protected $table = テーブル名、と指定
+            * 主キーがid以外は、protected $primaryKey = 主キー
+            * 主キーが増分でないなら、public $incrementing = false
+            * 主キーが整数以外は、protected $keyType = 型
+            * タイムスタンプ不要なら、public $timestamp = false
+    * Factory作成
+        * モデル作成と別個で作成する場合
+        * sail artisan make:factory ファクトリー名 —model=モデル名
+        * definition()にデータ定義
+        * ‘カラム名’ => $this->faker->realText(100)など
+        * ※日本語ならconfig/app.phpに、faker_locale => ja_JPと設定しておく
+    * Seeder作成
+        * sail artisan make:seeder
+        * ファクトリーを使ってレコード生成
+        * モデル名::factory()->count(10)->create()など
+    * データ生成
+        * sail artisan db:seed
+5. データベース利用（データ取得）
+    * コントローラに$データ名 = モデル名::all()でテーブル取得
+## 2. コード作成（Create）
+1. コントローラ作成
+    * sail artisan make:controller コントローラ名 —invokable
+    * 作成するフォームリクエストを使うようにする
+2. フォームリクエスト作成
+    * sail artisan meke:requet リクエスト名
+    * authorize()：誰でもリクエストできるならtrue
+    * rule()：バリデーションの追記 ‘データ名’ => ‘require|max:140’など
+3. ルート設定
+    * web.appに、ポストルートを追加
+    * ->name()で別名呼び出しができるようになる
+4. ブレードでフォーム作成
+    * 項目には@csrfでリクエストを暗号化する
+5. エラーメッセージの言語設定
+    * @errorディレクティブでエラー設定
+    * {{ $message }}でメッセージを表示
+    * ※日本語使うならconfig/app.phpに、local => ja、fallback_locale => jaと設定
+    * langフォルダの作成
+        * php artisan lang:publish
+    * langコンポーザのインストール
+        * sail composer require laravel-lang/lang:~10.3
+    * langファイルのコピー
+        * cp -R vendor/laravel-lang/lang/locales/ja lang/ja
+    * 自分で設定した値に関する翻訳
+        * lang/ja/validation.phpでattributesを定義
+        * attributes => [ データ名 => 翻訳 ]
+6. データベース利用（データ登録）
+    * リクエストでフォームを受け取るメソッドを追加
+        * メソッド{ return $this->input(フォームデータ) }
+    * コントローラでモデルを利用
+    * モデルのカラムにフォームデータを反映
+    * save()で、テーブル更新
+    * redirect()とかview()の指定
+## 3. コード作成（Update）
+1. コントローラ作成
+    * sail artisan make:controller コントローラ名 —invokable
+    * 編集画面分けるなら、それ用のコントローラも必要
+2. フォームリクエスト作成
+    * sail artisan meke:requet リクエスト名
+    * バリデーション設定
+    * フォームデータ受け取り
+3. ルート設定
+    * Route::putなら、ブレードでputメソッドの指示が必要
+    * IDで振り分けるなら、末尾にwhere(‘ID名’, ‘[0-9]+’ )などで整数値判定がされる
+    * RouteServiceProvider.phpのboot()に、
+    * Route::pattern(‘ID名’, ‘[0-9]+’)としても同じようなルート判定ができる
+4. ブレードでフォーム作成
+    * Route::putなら、フォームタグ直下に、@method(‘PUT’)とする
+    * 元ページに、details-smmaryなど、プルダウン追加も良い
+5. データベース利用（データ取得）
+    * コントローラ
+        * 受け取るIDを取得、(int) $request->route(‘ID名’)
+        * モデルからIDに一致するレコードを取得
+        * レコードがない場合の例外を設定、またはfirstOrFail()でもいい
+6. データベース利用（データ登録）
+    * コントローラ
+        * モデルデータ取得
+        * フォームデータ保存
+        * redirect()とか
+        * フラッシュセッション使うなら、with(‘データ名’, “メッセージ”)
+        * ブレードで、@if (session(‘データ名’))  {{ session(‘データ名’) }} @endifなど
+## 4. コード作成（Delete）
+1. コントローラ作成
+    * sail artisan make:controller コントローラ名 —invokable
+2. ルート設定
+    * Route::delete()
+3. データベース利用（データ削除）
+    * リクエストからID取得
+    * 取得IDからレコード取得
+    * delete()で削除
+    * redirectとか、フラッシュセッションとか
+4. ブレードにボタン作成
+    * deleteのフォーム直下に、@method(‘DELETE’)を記述
