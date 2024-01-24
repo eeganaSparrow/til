@@ -1,27 +1,27 @@
 # Laravel開発環境の作成
 ## 1. 開発環境の作成
 1. アプリ作成（実行後、5分ほど）
-    * curl -s "https://laravel.build/{アプリ名}?with={サービス名memcachedとか}” | bash
+    * `curl -s "https://laravel.build/{アプリ名}?with={サービス名memcachedとか}” | bash`
 2. アプリ立ち上げ
-    * sail up -d
+    * `sail up -d`
     * （./vendor/bin/sail up）
 3. ブラウザで確認
     * http://localhost
 ## 2. Sail環境のカスタマイズ
 1. dockerディレクトリの作成
-    * sail artisan sail:publish
+    * `sail artisan sail:publish`
 2.  Dockerfileのタイムゾーンなどを変更
     * TZ=‘Asia/Tokyo’
 3. 再ビルド
-    * sail build —no-cache
+    * `sail build —no-cache`
     * 完了後、sail up -d
     * sail shell実行後、dateでTZ確認
 4. MySQLの文字コードを設定
     * my.cnfを作成し、docker-compose.ymlで読み込む
     - confというタイポがあった。cnfなので、注意する。
 5. Laravel Breezeで認証機能を追加
-    * sail composer require laravel/breeze —dev
-    * sail artisan breeze:install
+    * `sail composer require laravel/breeze —dev`
+    * `sail artisan breeze:install`
 6. Git/GitHubで管理
     * git init、git add .、git commit
     * GitHubにリポジトリ追加
