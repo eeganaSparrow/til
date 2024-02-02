@@ -2,7 +2,7 @@
 # 1. コンポーネント化＋Tailwind CSS利用の準備
 * 機能ごとにコンポーネントを分割して設計
     * コンポーネントの関係を把握する作業
-* <head>タグ内にviteのリンクを追加  
+* headタグ内にviteのリンクを追加  
     * @vite(‘resources/css/app.css’)
     * @vite(‘resources/js/app.js’)
 # 2. propsの指定
